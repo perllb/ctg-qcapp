@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title> CTG Pipelines </title>
+</head>
+
+{% extends "base.html" %}
+{% block upper %}
+
+
+
+<h1 > CTG Pipelines </h1>
+<br>
+    <h3 id="ctg-samplesheet-guide">CTG SampleSheet guide</h3>
+    <h4 style=text-align:left id="_how-to-set-up-samplesheets-for-successful-automation-of-transfer-and-analysis-at-ctg_"><em>How to set up samplesheets for successful automation of transfer and analysis at CTG</em></h4>
+    <br>
+    <br>
+    <h2 id="Main steps">Main steps</h2>
+    <p style=font-size:20px> 1. Automatic transfer: Name samplesheet in runfolder with prefix "<strong>CTG_SampleSheet.</strong>" </p>
+    <p style=font-size:20px> 2. Automatic pipeline execution: Describe which pipeline after prefix: "CTG_SampleSheet.<strong>name-of-pipeline</strong>.csv". See "Samplesheet name" in table below.</p>
+    <p style=font-size:20px> 3. Every pipeline has specific requirements for samplesheet format and content. Click pipelines in table below for more details for the specific pipeline </p>
+    <br>
+    <p style=font-size:20px> <strong>General</strong>: Sample_ID and Sample_Name can ONLY contain "_" as a special character. All other special characters will cause demux to crash</p>
+
+<h4> Usage </h4>
+<ul style=font-size:13px>
+  <li> 'Pipeline' to go to github page for pipeline (description of input files)</li>
+  <li> 'QC' to list all project QC for given pipeline </li>
+  <li> 'Samplesheet name' to copy samplesheet name to clipboard  </li>
+</ul>
+
+<h4 id="10x-single-cell">10x single cell</h4>
+<table class="table table-striped table-bordered table-narrow table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Pipeline</th>
+      <th>QC</th>
+      <th>Samplesheet name (click to copy)</th>
+      <th>Description of pipeline</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> <a target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-rna-10x' + '#input-files'  }}">sc-rna-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-rna-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p1" onclick="copyToClipboard('#p1')">CTG_SampleSheet.sc-rna-10x.csv</button> </td>
+      <td>10x RNA only</td>
+    </tr>
+
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-cellplex-10x' + '#input-files'  }}">sc-cellplex-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-cellplex-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="pclplex" onclick="copyToClipboard('#pclplex')">CTG_SampleSheet.sc-cellplex-10x.csv</button> </td>
+      <td>10x RNA + Cellplex</td>
+    </tr>
+
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-cite-seq-10x' + '#input-files'  }}">sc-cite-seq-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-cite-seq-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p4" onclick="copyToClipboard('#p4')">CTG_SampleSheet.sc-cite-seq-10x.csv</button> </td>
+      <td>10x RNA+CITE-seq (ADT or HTO)</td>
+    </tr>
+
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-multi-10x' + '#input-files'  }}">sc-multi-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-multi-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="pmulti" onclick="copyToClipboard('#pmulti')">CTG_SampleSheet.sc-multi-10x.csv</button> </td>
+      <td>10x GEX + (ADT or HTO) + CMO </td>
+    </tr>
+	
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-arc-10x' + '#input-files'  }}">sc-arc-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-arc-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p2" onclick="copyToClipboard('#p2')">CTG_SampleSheet.sc-arc-10x.csv</button> </td>
+      <td>10x RNA + ATAC</td>
+    </tr>
+
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-atac-10x' + '#input-files'  }}">sc-atac-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-atac-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p3" onclick="copyToClipboard('#p3')">CTG_SampleSheet.sc-atac-10x.csv</button> </td>
+      <td>10x ATAC</td>
+    </tr>
+
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-mkfastq-10x' + '#input-files'  }}">sc-mkfastq-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-mkfastq-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p5" onclick="copyToClipboard('#p5')">CTG_SampleSheet.sc-mkfastq-10x.csv</button> </td>
+      <td>10x demultiplexing only</td>
+    </tr>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-vdj-adt-gex-10x' + '#input-files'  }}">sc-vdj-adt-gex-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-vdj-adt-gex-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p6" onclick="copyToClipboard('#p6')">CTG_SampleSheet.sc-vdj-adt-gex-10x.csv</button> </td>
+      <td>10x VDJ + Feature Barcoding + GEX (mRNA) libraries</td>
+    </tr>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-vdj-gex-10x' + '#input-files'  }}">sc-vdj-gex-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='sc-vdj-adt-gex-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p7" onclick="copyToClipboard('#p7')">CTG_SampleSheet.sc-vdj-gex-10x.csv</button> </td>
+      <td>10x VDJ + GEX (mRNA) libraries</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+<h4 id="rna-seq-bulk-">RNA-seq (bulk)</h4>
+<table class="table table-striped table-bordered table-narrow table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Pipeline name</th>
+      <th> QC </th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/cirrina/ctg-rnaseq' }}">rnaseq_mrna</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='rnaseq_mrna') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p9" onclick="copyToClipboard('#p9')">CTG_SampleSheet.rnaseq.csv</button> </td>
+      <td>bulk mRNAseq</td>
+    </tr>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/cirrina/ctg-rnaseq' }}">rnaseq_total</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='rnaseq_total') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p9" onclick="copyToClipboard('#p9')">CTG_SampleSheet.rnaseq.csv</button> </td>
+      <td>bulk totalRNA</td>
+    </tr>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/cirrina/ctg-rnaseq' }}">uroscan</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='uroscan') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p9" onclick="copyToClipboard('#p9')">CTG_SampleSheet.rnaseq.csv</button> </td>
+      <td>Uroscan</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+<h4 id="dna" >DNA</h4>
+<table class="table table-striped table-bordered table-narrow table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Pipeline name</th>
+      <th> QC </th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-panel-tumor-only' + '#input-files'  }}">panel-tumor-only</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='panel-tumor-only') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p10" onclick="copyToClipboard('#p10')">CTG_SampleSheet.panel-tumor-only.csv</button> </td>
+      <td> Panel Tumor Only (Somatic Dragen analysis)</td>
+    </tr>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-exome' + '#input-files'  }}">exome</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='exome') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p10" onclick="copyToClipboard('#p10')">CTG_SampleSheet.exome.csv</button> </td>
+      <td>Exome / Panel (Dragen analysis)</td>
+    </tr>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-wgs' + '#input-files'  }}">wgs</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='wgs') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p11" onclick="copyToClipboard('#p11')">CTG_SampleSheet.wgs.csv</button> </td>
+      <td>WGS (Dragen analysis)</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h4 id="seqonly">Seqonly</h4>
+<table class="table table-striped table-bordered table-narrow table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Pipeline name</th>
+      <th> QC </th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> <a target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-seqonly' + '#input-files'  }}">seqonly</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='seqonly') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p12" onclick="copyToClipboard('#p12')">CTG_SampleSheet.seqonly.csv</button> </td>
+      <td>Seqonly project: Demux and QC</td>
+    </tr>
+
+    <tr>
+      <td> <a target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-rawdata-delivery-cron' + '#input-files'  }}">rawdata</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.interop') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p12" onclick="copyToClipboard('#p12')">CTG_SampleSheet.rawdata.csv</button> </td>
+      <td>Seqonly project: Rawdata delivery </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+<br>
+<h4 id="spatial-transcriptomics">Spatial Transcriptomics</h4>
+<table class="table table-striped table-bordered table-narrow table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Pipeline name</th>
+      <th> QC </th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-visium-10x' + '#input-files'  }}">visium-10x</a> </td>
+      <td style="text-align:center" > <a class="btn btn-dark" href="{{ url_for('listers.list_projdir',mode='visium-10x') }}"> QC </a> </td>
+      <td style="text-align:center"> <button class="btn btn-light" id="p8" onclick="copyToClipboard('#p8')">CTG_SampleSheet.visium-10x.csv</button> </td>
+      <td>10x Visium</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+<script>
+  function copyToClipboard(element) {
+      var $temp = $("<input>");
+      $("body").append($temp);
+      $temp.val($(element).text()).select();
+      document.execCommand("copy");
+      $temp.remove();
+  }
+  </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+{% endblock %}
+
+</body>
+</html>

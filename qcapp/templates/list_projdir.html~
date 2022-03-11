@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title> QC {{ qctype }} </title>
+</head>
+  <body>
+    {% extends "pipedirs.html" %}
+    {% block upper %}
+
+    <br>
+    <div class="control">
+      <form align=left>
+       <input class="btn btn-secondary" type="button" value="back" onclick="history.back()">
+      </form>
+    </div>
+
+    <h1 > {{ qctype }} </h1>
+    <a class="btn btn-info"  href="{{ 'https://github.com/perllb/ctg-' + qctype   }}" target="_blank" class="button">Pipeline description</a> 
+    <a class="btn btn-info"  href="{{ 'https://github.com/perllb/ctg-' + qctype + '#input-files'  }}" target="_blank" class="button">Input files</a> 
+    <br>
+
+    {% if sendmeta == "1" %}
+    <p class="menu-label">
+      <a href="{{ url_for('static',filename=metaqc) }}" target="_blank">
+	<h2> META QC (All {{ qctype }} runs) </h2>	
+      </a>
+    </p>
+    {% endif %}
+    <p class="menu-label">
+      <h2> Projects </h2>
+    </p>
+
+     <p>Click the headers to sort the table on Project-ID or Date.</p>
+
+       <table style="width:100%;" id="projidTable" class="table table-striped table-bordered table-narrow table-hover table-sm" >
+         <thead>
+           <tr>
+             <th style=cursor:pointer onclick="sortTable(0)"> CTG Project-ID </th>
+             <th style=cursor:pointer onclick="sortTable(1)"> Runfolder </th>
+             <th style=cursor:pointer onclick="sortTable(2)"> Date (last modified) </th>
+           </tr>
+         </thead>
+         {% for key, value in result.items() %}
+           <tr>
+             <td> <a href="{{ url_for('listers.list_projhtml',proj=key) }}">{{ key }}</a> </td>
+             <td> <a href="{{ url_for('listers.interop_html',run=value[1]) }}">{{ value[1] }} </a> </td>
+             <td>  {{ value[0] }} </td>
+           </tr>
+         {% endfor %}
+       </table>
+
+     <script>
+     function sortTable(n) {
+       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+       table = document.getElementById("projidTable");
+       switching = true;
+       // Set the sorting direction to ascending:
+       dir = "desc";
+       /* Make a loop that will continue until
+       no switching has been done: */
+       while (switching) {
+         // Start by saying: no switching is done:
+         switching = false;
+         rows = table.rows;
+         /* Loop through all table rows (except the
+         first, which contains table headers): */
+         for (i = 1; i < (rows.length - 1); i++) {
+           // Start by saying there should be no switching:
+           shouldSwitch = false;
+           /* Get the two elements you want to compare,
+           one from current row and one from the next: */
+           x = rows[i].getElementsByTagName("TD")[n];
+           y = rows[i + 1].getElementsByTagName("TD")[n];
+           /* Check if the two rows should switch place,
+           based on the direction, asc or desc: */
+           if (dir == "desc") {
+             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+               // If so, mark as a switch and break the loop:
+               shouldSwitch = true;
+               break;
+             }
+           } else if (dir == "asc") {
+             if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+               // If so, mark as a switch and break the loop:
+               shouldSwitch = true;
+               break;
+             }
+           }
+         }
+         if (shouldSwitch) {
+           /* If a switch has been marked, make the switch
+           and mark that a switch has been done: */
+           rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+           switching = true;
+           // Each time a switch is done, increase this count by 1:
+           switchcount ++;
+         } else {
+           /* If no switching has been done AND the direction is "asc",
+           set the direction to "desc" and run the while loop again. */
+           if (switchcount == 0 && dir == "desc") {
+             dir = "asc";
+             switching = true;
+           }
+         }
+       }
+     }
+     </script>
+
+
+     </div>
+    {% endblock %}
+   </body>
+</html>

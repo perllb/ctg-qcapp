@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title> CTG Cron Feed </title>
+</head>
+<style>
+    .table_wrapper{
+#      display: block;
+#      overflow: auto;
+#      white-space: nowrap;
+      position: sticky;
+      width: 110%;
+      height:100%;
+      left: 10%;
+      right: 8px;
+  }
+  .sc-rna-10x-disp{
+      background:    CornflowerBlue   !important;
+      font-size: 18px;
+  }
+  .sc-rna-10x-failed-disp{
+      color:   #C70039    ;
+      font-size: 18px;
+      background: CornflowerBlue !important;
+  }
+  .sc-rna-10x-done-disp{
+      color:    #74e4b6     ;
+      font-size: 18px;
+      background: CornflowerBlue !important;
+  }
+  .sc-rna-10x-delivered-disp{
+      color:    white     ;
+      font-size: 18px;
+      background: CornflowerBlue !important;
+  }
+
+  .cellplex-disp{
+      background:    #95B9C7   !important;
+      font-size: 18px;
+  }
+  .cellplex-failed-disp{
+      color:   #C70039    ;
+      font-size: 18px;
+      background: #95B9C7 !important;
+  }
+  .cellplex-done-disp{
+      color:    #74e4b6     ;
+      font-size: 18px;
+      background: #95B9C7 !important;
+  }
+  .cellplex-delivered-disp{
+      color:    white     ;
+      font-size: 18px;
+      background: #95B9C7 !important;
+  }
+
+  .cite-seq-disp{
+      background: #C9DFEC   !important;
+      font-size: 18px;
+  }
+  .cite-seq-failed-disp{
+      color:   #C70039    ;
+      font-size: 18px;
+      background: #C9DFEC !important;
+  }
+  .cite-seq-done-disp{
+      color:    #348781     ;
+      font-size: 18px;
+      background: #C9DFEC !important;
+  }
+  .cite-seq-delivered-disp{
+      color:    white     ;
+      font-size: 18px;
+      background: #C9DFEC !important;
+  }
+  
+  .seqonly-disp{
+      background:  #d7bde2   !important;
+      font-size: 18px;
+  }
+  .seqonly-failed-disp{
+      color: #C70039 ;
+      background:  #d7bde2   !important;
+      font-size: 18px;
+  }
+  .seqonly-done-disp{
+      color: #348781 ;
+      background:  #d7bde2   !important;
+      font-size: 18px;
+  }
+  .seqonly-delivered-disp{
+      color: white ;
+      background:  #d7bde2   !important;
+      font-size: 18px;
+  }
+
+
+  .rawdata-failed-disp{
+      color:   #C70039    ;
+      font-size: 18px;
+      background:  #fae5d3  !important;
+  }
+  .rawdata-done-disp{
+      color:    #27ae60      ;
+      font-size: 18px;
+      background: #fae5d3  !important;
+  }
+  .rawdata-done-delivered-disp{
+      color:    #27ae60      ;
+      font-size: 18px;
+      background: #fae5d3  !important;
+  }
+  .rawdata-disp{
+      font-size: 18px;
+      background:  #fae5d3 !important;
+  }
+
+  .interop-disp{
+      background:    Cornsilk   !important;
+      font-size: 18px;
+  }
+  .sav-save-disp{
+      background:   lavender    !important;
+      font-size: 18px;
+  }
+  
+
+  .identified-disp{
+      background:    #e8f6f3    !important;
+      font-size: 18px;
+  }
+  .completed-disp{
+      background:    #a2d9ce    !important;
+      font-size: 18px;
+  }
+  .start-disp{
+      background:    #45b39d  !important;
+      font-size: 18px;
+  }
+  .synced-disp{
+      background:     #138d75    !important;
+      font-size: 18px;
+  }
+
+
+  html, body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background-color:#000;
+      top: 0;
+      left: 0;   
+  }
+
+  .box {
+      display: flex;
+      min-height: min-content; /* needs vendor prefixes */
+      left:0;
+      width:100%;
+      font-size:13px
+  }
+  .spread { margin:0; } 
+</style>
+  <body>
+    {% extends "base.html" %}
+    {% block upper %}
+    <h1>
+      CTG Cron news
+    </h1>
+    <div class=content>
+      <h2 id="runfoldersync">
+        Runfolder sync
+      </h2>
+      <p> Updated: {{ runtid }} </p>
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <table class="table table-responsive">
+	    <table class="table table-striped table-bordered table-narrow table-hover table-sm">
+              {% for key, value in sync.items() %}
+	      {% if loop.index < 30 %}
+				 <tr> <td class="{{ value[1] }}-disp"> {{ value[0] }} </tr> </td>
+              {% endif %}
+              {% endfor %}
+            </table>
+</table>
+</div>
+</div>
+</div>
+<div>
+      <h2 id="pipes">
+	ls4 cron (ctg pipelines)
+      </h2>
+      <p> Updated: {{ crontid }} </p>
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <table class="table table-responsive">
+	    <table class="table table-striped table-bordered table-narrow table-hover table-sm">
+	{% for key, value in ls4.items() %}
+	{% if loop.index < 30 %}
+			   <tr> <td class="{{ value[1] }}-disp"> {{ value[0] }} </tr> </td>
+        {% endif %}
+        {% endfor %}
+</table>
+</table>
+</div>
+</div>
+</div>
+<div>
+  <h2 id="squeue">
+    ls4 squeue (currently running / queued processes)
+  </h2>
+  <p> Updated: {{ sqtid }} </p>
+  {{ squeue | safe }}
+<br>
+<br>
+<br>
+<br>
+<br>
+<p></p>
+  {% endblock %}
+   </body>
+</html>

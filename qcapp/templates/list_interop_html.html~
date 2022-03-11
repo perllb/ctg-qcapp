@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title> CTG Interop </title>
+</head>
+<style>
+  ul {
+  display: inline-block;
+  text-align: left;
+  }
+  .alert.success {
+    background-color: Teal;
+  }
+
+  .alert.error {
+    background-color: IndianRed;
+  }
+  .table_wrapper{
+      display: block;
+      overflow: auto;
+      white-space: nowrap;
+      position: fixed;
+      width: 98%;
+      height: 95%;
+      left: 1%;
+      right: 8px;
+  }
+}
+</style>
+  <body>
+    {% extends "base.html" %}
+    {% block upper %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">
+            {{ message|capitalize }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="table_wrapper">
+      <table id="projidTable" class="a table table-striped table-bordered table-narrow table-hover table-sm" >
+        <thead>
+          <tr>
+            <th style=cursor:pointer onclick="sortTable(0)"> Runfolder with interop </th>
+	    <th style=cursor:pointer onclick="sortTable(1)"> Occupied vs PF </th>
+	    <th style=cursor:pointer> Q-score Heat</th>
+	    <th style=cursor:pointer> Q-score Hist</th>
+	    <th style=cursor:pointer> Intensity cell cycle</th>
+	    <th style=cursor:pointer> Intensity FlowCell </th>
+	    <th style=cursor:pointer> Cluster Count vs PF </th>
+            <th style=cursor:pointer onclick="sortTable(6)"> Date (last modified) </th>
+          </tr>
+        </thead>
+        {% for key, value in result.items() %}
+          <tr>
+            <td>
+	      <a href="{{ url_for('listers.interop_html',run=key) }}" target='_blank'>{{ key }}</a>
+	      <i class="bi bi-download">
+		<a href="{{ url_for('listers.interop_html',run=key) }}" download>
+		  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+		    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+		    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+		  </svg>
+		</a>
+	      </i>
+	    </td>
+	    <td> <!-- OCC PF plot -->
+	      {% if value[2] != "na" %}
+	      <a href="{{ url_for('listers.interop_occpf',run=key) }}" target='_blank'><img src="{{ value[2] }}" alt="" border=3 height=200 width=250></img></a>
+	      {% endif %}
+	      {% if value[2] == "na" %}
+	      na
+	      {% endif %}
+	    <td> <!-- Q-score heatmap -->
+	      {% if value[3] != "na" %}
+	      <a href="{{ url_for('listers.interop_run_plot',run=key,plot='q-heat-map') }}" target='_blank'><img src="{{ value[3] }}" alt="" border=3 height=200 width=250></img></a>
+	      {% endif %}
+	      {% if value[3] == "na" %}
+	      na
+	      {% endif %}
+	    <td> <!-- Q-score histogram -->
+	      {% if value[4] != "na" %}
+	      <a href="{{ url_for('listers.interop_run_plot',run=key,plot='q-histogram') }}" target='_blank'><img src="{{ value[4] }}" alt="" border=3 height=200 width=250></img></a>
+	      {% endif %}
+	      {% if value[4] == "na" %}
+	      na
+	      {% endif %}
+	    </td>
+	    <td> <!-- Cell Cycle Intensity -->
+	      {% if value[5] != "na" %}
+	      <a href="{{ url_for('listers.interop_run_plot',run=key,plot='Intensity-by-cycle_Intensity') }}" target='_blank'><img src="{{ value[5] }}" alt="" border=3 height=200 width=250></img></a>
+	      {% endif %}
+	      {% if value[5] == "na" %}
+	      na
+	      {% endif %}
+	    </td>
+
+	    <td> <!-- FlowCell Intensity -->
+	      {% if value[6] != "na" %}
+	      <a href="{{ url_for('listers.interop_run_plot',run=key,plot='flowcell-Intensity') }}" target='_blank'><img src="{{ value[6] }}" alt="" border=3 height=200 width=130></img></a>
+	      {% endif %}
+	      {% if value[6] == "na" %}
+	      na
+	      {% endif %}
+	    </td>
+
+	    <td> <!-- Cluster Count -->
+	      {% if value[7] != "na" %}
+	      <a href="{{ url_for('listers.interop_run_plot',run=key,plot='ClusterCount-by-lane') }}" target='_blank'><img src="{{ value[7] }}" alt="" border=3 height=200 width=150></img></a>
+	      {% endif %}
+	      {% if value[7] == "na" %}
+	      na
+	      {% endif %}
+	    </td>
+		    
+            <td>  {{ value[1] }} </td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <script>
+    function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("projidTable");
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "desc";
+      /* Make a loop that will continue until
+      no switching has been done: */
+      while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /* Loop through all table rows (except the
+        first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+          // Start by saying there should be no switching:
+          shouldSwitch = false;
+          /* Get the two elements you want to compare,
+          one from current row and one from the next: */
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          /* Check if the two rows should switch place,
+          based on the direction, asc or desc: */
+          if (dir == "desc") {
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          } else if (dir == "asc") {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              // If so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+        if (shouldSwitch) {
+          /* If a switch has been marked, make the switch
+          and mark that a switch has been done: */
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          // Each time a switch is done, increase this count by 1:
+          switchcount ++;
+        } else {
+          /* If no switching has been done AND the direction is "asc",
+          set the direction to "desc" and run the while loop again. */
+          if (switchcount == 0 && dir == "desc") {
+            dir = "asc";
+            switching = true;
+          }
+        }
+      }
+    }
+    </script>
+      {% endblock %}
+   </body>
+</html>

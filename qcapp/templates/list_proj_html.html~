@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title> QC {{ proj }} </title>
+</head>
+<style>
+.qcmenu{
+  margin-left:40px;
+  color:#106576
+}
+</style>
+
+  <body>
+    {% extends "pipedirs.html" %}
+    {% block upper %}
+
+    <br>
+    <div class="control">
+      <form align=left>
+       <input class="btn btn-secondary" type="button" value="back" onclick="history.back()">
+      </form>
+    </div>
+
+  <br>
+  <h1 > {{ proj }} QC </h1>
+  <h2> {{ qctype }} pipeline </h2>
+
+    <!-- Download QC folder function .. 
+    <div class="control">
+      <a href="{{ url_for('static',filename=qcdir) }}" download>
+	<img src="/static/images/download.icon.png"> download project folder 
+      </a>
+    </div>
+    -->
+
+  
+  <aside class="menu">
+    <h2 class="qcmenu"> multiqc </h2>
+    <ul class="menu">
+    {% for key, value in result.items() %}
+    {% if "multiqc" in key or "report.html" in key  %}
+    <li>
+      <a href="{{ url_for('static',filename=value) }}" target="_blank">
+	{{ key }}  
+      </a>
+            <i class="bi bi-download">
+	<a href="{{ url_for('static',filename=value) }}" download>
+	  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+	    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+	    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+	  </svg>
+	</a>
+      </i>
+    </li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+<br>
+
+    {% if "SC-" in qctype or "10x" in qctype %}
+      {% if "mkfastq" not in qctype %}
+        <h2 class="qcmenu">  web-summary (cellranger) </h2>
+        <ul class="menu">
+        {% for key, value in result.items() %}
+        {% if "web_summary" in key %}
+        <li>
+	  <a href="{{ url_for('static',filename=value) }}" target='_blank'>{{ key }}</a>
+	  <i class="bi bi-download">
+	    <a href="{{ url_for('static',filename=value) }}" download>
+	      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+		<path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+		<path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+	      </svg>
+	    </a>
+	  </i>
+	</li>
+        {% endif %}
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endif %}
+
+    {% set vars = {'fastqc': False} %}
+    {% for key, value in result.items() %}
+      {% if "fastqc" in key %}
+        {% if vars.update({'fastqc': True}) %} {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if vars.fastqc %}
+    <h2 class="qcmenu"> fastqc  </h2>
+    <ul class="menu">
+      {% for key, value in result.items() %}
+        {% if "fastqc" in key %}
+      <li>
+	<a href="{{ url_for('static',filename=value) }}" target="_blank">{{ key }}</a>
+	      <i class="bi bi-download">
+	<a href="{{ url_for('static',filename=value) }}" download>
+	  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+	    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+	    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+	  </svg>
+	</a>
+      </i>
+      </li>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    </ul>
+
+
+    <br>
+
+    <h4 class="qcmenu"> all html files (including all listed above) </h4>
+    <ul class="menu">
+    {% for key, value in result.items() %}
+    <li>
+      <a style="font-size:12px" href="{{ url_for('static',filename=value) }}" target="_blank">{{ key }}</a>
+            <i class="bi bi-download">
+	<a href="{{ url_for('static',filename=value) }}" download>
+	  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+	    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+	    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+	  </svg>
+	</a>
+      </i>
+    </li>
+    {% endfor %}
+    </ul>
+
+    {% endblock %}
+   </body>
+</html>

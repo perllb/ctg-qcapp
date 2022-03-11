@@ -1,0 +1,6 @@
+db_ctg.sqlite*
+ctg-data
+crons
+qcapp/static
+qcapp/auth
+qcapp/archive/

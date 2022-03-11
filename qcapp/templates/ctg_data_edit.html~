@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.custom-select{
+    width:245px
+}
+</style>
+<form method="Post" action="">
+<h1> {{ title }} </h1>
+   Project CTG-ID:<br>
+   <input type="text" name="projectid" value="{{proj.projid}}"><br>
+   Status:<br>
+   <input type="text" name="status" value="{{proj.status}}"><br>
+   Runfolder:<br>
+   <input type="text" name="runfolder" value="{{proj.runfolder}}"><br><br>
+   BNFdude:<br>
+   <select class="custom-select" id="bnfdude" name="bnfdude" value="{{proj.bnfdude}}">
+      <option selected>{{proj.bnfdude}}</option>
+      <option value="P">Per</option>
+      <option value="D">David</option>
+    </select><br><br>
+   On Lsens4 ?:<br>
+   <select class="custom-select" id="lsens4" name="lsens4">
+      <option selected>{{proj.lsens4}}</option>
+      <option value="y">Yes</option>
+      <option value="n">No</option>
+      <option value="syncing..">Syncing..</option>
+      <option value="deleted">Deleted</option>
+    </select><br><br>
+   Workfolder:<br>
+   <input type="text" name="workfolder" value="{{proj.workfolder}}" ><br><br>
+   Customer PI:<br>
+   <input type="text" name="customerpi" value="{{proj.customerpi}}" ><br><br>
+   Customer:<br>
+   <input type="text" name="customer2" value="{{proj.customer2}}" ><br><br>
+   lfs603 user:<br>
+   <input type="text" name="lfs603user" value="{{proj.lfs603user}}" ><br><br>
+   Delivery contact:<br>
+   <input type="text" name="deliverycontact" value="{{proj.deliverycontact}}" ><br><br>
+   Pipeline:<br>
+   <select class="custom-select" id="datatype" name="datatype">
+      <option selected>{{proj.datatype}}</option>
+      <option value="raw data delivery">raw data delivery</option>
+      <option value="ctg-sc-rna-10x">sc-rna-10x</option>
+      <option value="ctg-sc-arc-10x">sc-arc-10x</option>
+      <option value="ctg-sc-atac-10x">sc-atac-10x</option>
+      <option value="ctg-sc-cite-seq-10x">sc-cite-seq-10x</option>
+      <option value="ctg-sc-mkfastq-10x">sc-mkfastq-10x</option>
+      <option value="ctg-sc-vdj-adt-gex-10x">sc-vdj-adt-gex-10x</option>
+      <option value="ctg-sc-vdj-gex-10x">sc-vdj-gex-10x</option>
+      <option value="ctg-visium-10x">visium-10x</option>
+      <option value="ctg-rnaseq">rnaseq</option>
+      <option value="ctg-exome">exome</option>
+      <option value="ctg-wgs">wgs</option>
+      <option value="ctg-seqonly">seqonly</option>
+    </select><br><br>
+   Library:<br>
+   <input type="text" name="library" value="{{proj.library}}" ><br><br>
+   Delivered ?:<br>
+   <select class="custom-select" id="delivered" name="delivered" value="{{proj.delivered}}">
+      <option selected>{{proj.delivered}}</option>
+      <option value="y">Yes</option>
+      <option value="n">No</option>
+      <option value="no-delivery">Do not deliver</option>
+    </select><br><br>
+   QC logged ?:<br>
+   <select class="custom-select" id="qclogged" name="qclogged" value="{{proj.qclogged}}">
+      <option selected>{{proj.qclogged}}</option>
+      <option value="y">Yes</option>
+      <option value="n">No</option>
+    </select><br><br>
+   CTG-interop run?:<br>
+   <select class="custom-select" id="ctginterop" name="ctginterop" value="{{proj.ctginterop}}">
+      <option selected>{{proj.ctginterop}}</option>
+      <option value="y">Yes</option>
+      <option value="n">No</option>
+    </select><br><br>
+   CTG-sav-save run?:<br>
+   <select class="custom-select" id="ctgsavsave" name="ctgsavsave" value="{{proj.ctgsavsave}}">
+      <option selected>{{proj.ctgsavsave}}</option>
+      <option value="y">Yes</option>
+      <option value="n">No</option>
+    </select><br><br>
+    Delivery report delivered?:<br>
+    <select class="custom-select" id="deliveryrep" name="deliveryrep">
+       <option selected>{{proj.deliveryrep}}</option>
+       <option value="y">Yes</option>
+       <option value="n">No</option>
+     </select><br><br>
+   Comment:<br>
+   <input type="text" name="comment" value="{{proj.comment}}"><br><br>
+   <input class="btn btn-dark btn-sm" type="submit" value="Edit">
+   <button class="btn btn-dark btn-sm" type="button" value="Cancel">
+      <a href="{{ url_for('ctgdata.ctgdata_ctgproj') }}" style=color:red>
+       Cancel
+      </a>
+    </button>
+</form>
+{% endblock %}

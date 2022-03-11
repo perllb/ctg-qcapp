@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CTG QC web app</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+
+<style>
+
+  #my{
+      zoom: 60%;
+  }
+  tr:nth-child(even) {background-color:  Platinum ;}
+  thead {
+      color: white;
+      top:0;
+      position: sticky;
+      border: 1px solid white;
+      z-index: 1;
+  }
+  table {
+      border-collapse: collapse;
+  }
+  th {
+      text-align: center;
+      padding: 0px;
+      border-bottom: 10px solid #ddd;
+      color: white;
+      background-color: CadetBlue;
+  }
+  .table {
+      margin-left: auto;
+      margin-right: auto;
+  }
+  
+  @media screen and (max-height: 450px) {
+      .sidenav {padding-top: 15px;}
+  }
+  
+  a{
+      color:SteelBlue;
+  }
+
+
+</style>
+
+
+
+<body>
+  <div class="hero-head">
+    <nav class="navbar navbar-light bg-light navbar-expand-lg navbar-light bg-light">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      {% if current_user.is_authenticated %}
+     
+      <div style="size:10px" class="collapse navbar-collapse" id="navbarSupportedContent">
+        <a class="navbar-brand" style="color:CadetBlue">CTG web-app</a>
+        <ul class="navbar-nav mr-auto ">
+          <li class="nav-item">
+            <a href="{{ url_for('listers.pipelist') }}"  class="nav-item nav-link ">
+	      CTG Pipelines
+            </a>
+          </li>
+	  
+          <li class="nav-item">
+            <a href="{{ url_for('listers.list_all_projdir') }}"  class="nav-item nav-link ">
+	      CTG Projects
+            </a>
+          </li>
+	  
+          <li class="nav-item">
+            <a href="{{ url_for('listers.interop') }}"  class="nav-item nav-link ">
+	      Interop
+            </a>
+          </li>
+
+	  <li class="nav-item">
+            <a href="{{ url_for('listers.squeue') }}"  class="nav-item nav-link ">
+	      Ls4 squeue
+            </a>
+          </li>
+
+	  <li class="nav-item">
+            <a href="{{ url_for('listers.rfsync') }}"  class="nav-item nav-link ">
+	      Runfolder Sync
+            </a>
+          </li>
+
+	  <li class="nav-item">
+            <a href="{{ url_for('listers.ls4cron') }}"  class="nav-item nav-link ">
+	      Lsens4-cron
+            </a>
+          </li>
+	  
+	  <!--
+          <li class="nav-item dropdown">
+	    <a class="nav-link dropdown-toggle" href="{{ url_for('listers.cron') }}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Cron Feed
+            </a>
+	    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	      <a class="dropdown-item" href="{{ url_for('listers.cron') }}#runfoldersync">Runfolder-sync</a>
+	      <a class="dropdown-item" href="{{ url_for('listers.cron') }}#pipes">CTG-Pipelines</a>
+	      <a class="dropdown-item" href="{{ url_for('listers.cron') }}#squeue">Squeue-LS4</a>
+	    </div>
+          </li>
+	-->	    
+          <li class="nav-item">
+            <a href="{{ url_for('ctgdata.ctgdata_ctgproj') }}"  class="nav-item nav-link" >
+	      CTGdata
+            </a>
+          </li>
+
+	  <li class="nav-item">
+            <a href="{{ url_for('listers.status') }}"  class="nav-item nav-link" >
+	      Status
+            </a>
+          </li>
+
+	  <li class="nav-item">
+            <a href="{{ url_for('listers.list_new_proj') }}"  class="nav-item nav-link" >
+	      QC news
+            </a>
+          </li>
+        </ul>
+        {% endif %}
+
+
+        <div class="navbar-end justify-content-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <ul class="navbar-nav justify-content-end mr-auto mt-2 mt-lg-0">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                  <a href="{{ url_for('main.profile') }}" class="nav-item nav-link">
+                      Home
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{ url_for('auth.logout') }}" class="nav-item nav-link">
+                      Log out
+                  </a>
+                </li>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                <li class="nav-item">
+                  <a href="{{ url_for('auth.signup') }}" class="nav-item nav-link">
+                    <strong>Sign up</strong>
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ url_for('auth.login') }}" class="nav-item nav-link">
+                    Log in
+                  </a>
+                </li>
+                {% endif %}
+
+              </ul>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="hero-body">
+      <div class="container has-text-centered">
+         {% block upper %}
+         {% endblock %}
+      </div>
+  </div>
+  <div class="hero-body">
+      <div class="container has-text-centered">
+         {% block index %}
+         {% endblock %}
+      </div>
+  </div>
+  <div class="hero-body">
+      <div class="container has-text-centered">
+         {% block content %}
+         {% endblock %}
+      </div>
+  </div>
+</section>
+</body>
+</html>

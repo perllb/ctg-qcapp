@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title> CTG SampleSheet Guide </title>
+</head>
+
+<style>
+  tr:nth-child(even) {background-color:  lightgrey ;}
+  thead {
+      background-color: grey;
+      color: white;
+  }
+  table {
+  border-collapse: collapse;
+  }
+  th {
+    text-align: center;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    color: white;
+  }
+  .table {
+    align: left;
+  }
+  .markdown {
+      background-color: white;
+      color: black ;
+      text-align: left;
+      padding: 40px;
+  }
+  .markdown h4{
+      font-size: 20px;
+      font-weight:800;
+      text-align:center;
+    }
+  .markdown ul{
+      margin: 100;
+      padding: 100;
+      text-align: left;
+      height: 100%;
+      list-style-position: inside;
+  }
+  .markdown li{
+    width: 30%;
+    height: 80%;
+    font-size: 15px;
+    align: left;
+    list-style-type: square;
+  }
+</style>
+
+{% extends "base.html" %}
+{% block upper %}
+<body>
+  <div class="markdown">
+    <h1 id="ctg-samplesheet-guide">CTG SampleSheet guide</h1>
+    <h4 style=text-align:left id="_how-to-set-up-samplesheets-for-successful-automation-of-transfer-and-analysis-at-ctg_"><em>How to set up samplesheets for successful automation of transfer and analysis at CTG</em></h4>
+    <br>
+    <br>
+    <h2 id="Main steps">Main steps</h2>
+    <p style=font-size:20px> 1. Automatic transfer: Name samplesheet in runfolder with prefix "<strong>CTG_SampleSheet.</strong>" </p>
+    <p style=font-size:20px> 2. Automatic pipeline execution: Describe which pipeline after prefix: "CTG_SampleSheet.<strong>name-of-pipeline</strong>.csv". See "Samplesheet name" in table below.</p>
+    <p style=font-size:20px> 3. Every pipeline has specific requirements for samplesheet format and content. Click pipelines in table below for more details for the specific pipeline </p>
+    <br>
+    <p style=font-size:20px> <strong>General</strong>: Sample_ID and Sample_Name can ONLY contain "_" as a special character. All other special characters will cause demux to crash</p>
+    <br>
+      <br>
+      <h4 id="10x-single-cell">10x single cell</h4>
+      <table class="table table is-bordered is-striped is-narrow is-hoverable">
+      <thead>
+      <tr>
+      <th>Pipeline</th>
+      <th>Samplesheet name (click to copy)</th>
+      <th>Description of pipeline</th>
+      </tr>
+      </thead>
+      <tbody>
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-sc-rna-10x' + '#input-files'  }}">sc-rna-10x</a> </td>
+	  <td> <button class="btn btn-light"  id="p1" onclick="copyToClipboard('#p1')">CTG_SampleSheet.sc-rna-10x.csv</button> </td>
+	  <td>10x RNA only</td>
+	</tr>
+	
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-arc-10x' + '#input-files'  }}">sc-cellplex-10x</a> </td>
+	  <td style="text-align:center"> <button class="btn btn-light" id="pclplex" onclick="copyToClipboard('#pclplex')">CTG_SampleSheet.sc-cellplex-10x.csv</button> </td>
+	  <td>10x RNA + Cellplex</td>
+	</tr>
+
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info" href="{{ 'https://github.com/perllb/' + 'ctg-sc-cite-seq-10x' + '#input-files'  }}">sc-cite-seq-10x</a> </td>
+	  <td style="text-align:center"> <button class="btn btn-light" id="p4" onclick="copyToClipboard('#p4')">CTG_SampleSheet.sc-cite-seq-10x.csv</button> </td>
+	  <td>10x RNA+CITE-seq (ADT or HTO)</td>
+	</tr>
+
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-sc-atac-10x' + '#input-files'  }}">sc-atac-10x</a> </td>
+	  <td> <button class="btn btn-light"  id="p3" onclick="copyToClipboard('#p3')">CTG_SampleSheet.sc-atac-10x.csv</button> </td>
+	  <td>10x ATAC</td>
+	</tr>
+	
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-sc-arc-10x' + '#input-files'  }}">sc-arc-10x</a> </td>
+	  <td> <button class="btn btn-light"  id="p2" onclick="copyToClipboard('#p2')">CTG_SampleSheet.sc-arc-10x.csv</button> </td>
+	  <td>10x RNA + ATAC</td>
+	</tr>
+	
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-sc-mkfastq-10x' + '#input-files'  }}">sc-mkfastq-10x</a> </td>
+	  <td> <button class="btn btn-light"  id="p5" onclick="copyToClipboard('#p5')">CTG_SampleSheet.sc-mkfastq-10x.csv</button> </td>
+	  <td>10x demultiplexing only</td>
+	</tr>
+	
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-sc-vdj-adt-gex-10x' + '#input-files'  }}">sc-vdj-adt-gex-10x</a> </td>
+	  <td> <button class="btn btn-light"  id="p6" onclick="copyToClipboard('#p6')">CTG_SampleSheet.sc-vdj-adt-gex-10x.csv</button> </td>
+	  <td>10x VDJ + Feature Barcoding + GEX (mRNA) libraries</td>
+	</tr>
+	
+	<tr>
+	  <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-sc-vdj-gex-10x' + '#input-files'  }}">sc-vdj-gex-10x</a> </td>
+	  <td> <button class="btn btn-light"  id="p7" onclick="copyToClipboard('#p7')">CTG_SampleSheet.sc-vdj-gex-10x.csv</button> </td>
+	  <td>10x VDJ + GEX (mRNA) libraries</td>
+	</tr>
+      </tbody>
+      </table>
+
+      <br>
+      <h4 id="spatial-transcriptomics">Spatial Transcriptomics</h4>
+      <table class="table table is-bordered is-striped is-narrow is-hoverable">
+      <thead>
+      <tr>
+      <th>Pipeline name</th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-visium-10x' + '#input-files'  }}">visium-10x</a> </td>
+      <td> <button class="btn btn-light"  id="p8" onclick="copyToClipboard('#p8')">CTG_SampleSheet.visium-10x.csv</button> </td>
+      <td>10x Visium</td>
+      </tr>
+      </tbody>
+      </table>
+
+      <h4 id="rna-seq-bulk-">RNA-seq (bulk)</h4>
+      <table class="table table is-bordered is-striped is-narrow is-hoverable">
+      <thead>
+      <tr>
+      <th>Pipeline name</th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-rnaseq' + '#input-files'  }}">rnaseq</a> </td>
+      <td> <button class="btn btn-light"  id="p9" onclick="copyToClipboard('#p9')">CTG_SampleSheet.rnaseq.csv</button> </td>
+      <td>bulk RNA</td>
+      </tr>
+      </tbody>
+      </table>
+
+      <h4 id="dna" >DNA</h4>
+      <table class="table table is-bordered is-striped is-narrow is-hoverable">
+      <thead>
+      <tr>
+      <th>Pipeline name</th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-exome' + '#input-files'  }}">exome</a> </td>
+      <td> <button class="btn btn-light"  id="p10" onclick="copyToClipboard('#p10')">CTG_SampleSheet.exome.csv</button> </td>
+      <td>Exome / Panel to analyse with Dragen</td>
+      </tr>
+      <tr>
+      <td> <a  target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-wgs' + '#input-files'  }}">wgs</a> </td>
+      <td> <button class="btn btn-light"  id="p11" onclick="copyToClipboard('#p11')">CTG_SampleSheet.wgs.csv</button> </td>
+      <td>WGS to analyse with Dragen</td>
+      </tr>
+      </tbody>
+      </table>
+
+      <h4 id="seqonly">Seqonly</h4>
+      <table class="table table is-bordered is-striped is-hoverable">
+      <thead>
+      <tr>
+      <th>Pipeline name</th>
+      <th>Samplesheet</th>
+      <th>Description of pipeline</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td> <a target="_blank" class="btn btn-info"  href="{{ 'https://github.com/perllb/' + 'ctg-seqonly' + '#input-files'  }}">seqonly</a> </td>
+
+      <td> <button class="btn btn-light"  id="p12" onclick="copyToClipboard('#p12')">CTG_SampleSheet.seqonly.csv</button> </td>
+      <td>Seqonly project: Demux and QC</td>
+      </tr>
+      </tbody>
+      </table>
+  </div>
+
+  <script>
+  function copyToClipboard(element) {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(element).text()).select();
+    document.execCommand("copy");
+    $temp.remove();
+  }
+  function myFunction() {
+    var copyText = document.getElementById("myInput");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copied: " + copyText.value;
+  }
+
+  function outFunc() {
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+  }
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  {% endblock %}
+</body>
+</html>

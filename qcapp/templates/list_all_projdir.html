@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title> CTG Projects </title>
+</head>
+
+<style>
+  .alert.success {
+      background-color: Teal;
+  }
+  
+  .alert.error {
+      background-color: IndianRed;
+  }
+</style>
+{% extends "base.html" %}
+{% block upper %}
+
+<h1 > CTG Projects </h1>
+<div class="hero-head">
+  <nav class="navbar navbar-expand-lg " style="background-color: LightBlue;">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+	  <form method="POST" action="projsearch_post">
+	    <input style=font-size:16px  class="input is-small" class="form-control mr-sm-2" type="search_proj" name="search_proj" placeholder="Search Project-ID" aria-label="search_proj">
+	    <button style=font-size:16px class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
+	  </form>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<ul style=font-size:13px>
+  <li>Click ProjectID for QC</li>
+  <li>Click CTG-pipeline for browsing all projects run on pipeline</li>
+  <li>Click Runfolder for interop-QC report</li>
+</ul>
+<p>Click the headers to sort the table on Project-ID, CTG-pipeline or Date.</p>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert {{ category }}">
+  {{ message|capitalize }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<a class="btn btn-secondary active" href="#TestTable" role="button">Go to Test Runs</a> 
+<h2> CTG-projects </h2>
+<table id="projidTable" class="table table-striped table-bordered table-narrow table-hover table-sm" >
+  <thead>
+    <tr>
+      <th style=cursor:pointer onclick="sortTable(0)"> CTG Project-ID </th>
+      <th style=cursor:pointer onclick="sortTable(1)"> CTG-pipeline </th>
+      <th style=cursor:pointer onclick="sortTable(2)"> Runfolder </th>
+      <th style=cursor:pointer onclick="sortTable(3)"> Date (last modified) </th>
+    </tr>
+  </thead>
+  {% for key, value in result.items() %}
+  {% if "test" not in key and "Test" not in key and "dev" not in key and "europhins" not in key %}
+  <tr>
+    <td> <a href="{{ url_for('listers.list_projhtml',proj=key) }}">{{ key }}</a> </td>
+    <td> <a href="{{ url_for('listers.list_projdir',mode=value[1]) }}">{{ value[1] }} </td>
+    <td> <a href="{{ url_for('listers.interop_html',run=value[3]) }}">{{ value[3] }} </a> </td>
+    <td>  {{ value[2] }} </td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+</table>
+
+
+<h2 id="TestTable"> Test runs </h2>
+<table id="TestProjidTable" class="table table-striped table-bordered table-narrow table-hover table-sm" >
+  <thead>
+    <tr>
+      <th style=cursor:pointer onclick="sortTable(0)"> CTG Project-ID </th>
+      <th style=cursor:pointer onclick="sortTable(1)"> CTG-pipeline </th>
+      <th style=cursor:pointer onclick="sortTable(2)"> Runfolder </th>
+      <th style=cursor:pointer onclick="sortTable(3)"> Date (last modified) </th>
+    </tr>
+  </thead>
+  {% for key, value in result.items() %}
+  {% if "test" in key or "Test" in key or "dev" in key or "europhins" in key %}
+  <tr>
+    <td> <a href="{{ url_for('listers.list_projhtml',proj=key) }}">{{ key }}</a> </td>
+    <td> <a href="{{ url_for('listers.list_projdir',mode=value[1]) }}">{{ value[1] }} </td>
+    <td> <a href="{{ url_for('listers.interop_html',run=value[3]) }}">{{ value[3] }} </a> </td>
+    <td>  {{ value[2] }} </td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+</table>
+
+<script>
+  function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("projidTable");
+      switching = true;
+      // Set the sorting direction to ascending:
+      dir = "desc";
+      /* Make a loop that will continue until
+       no switching has been done: */
+      while (switching) {
+	  // Start by saying: no switching is done:
+	  switching = false;
+	  rows = table.rows;
+	  /* Loop through all table rows (except the
+	   first, which contains table headers): */
+	  for (i = 1; i < (rows.length - 1); i++) {
+	      // Start by saying there should be no switching:
+	      shouldSwitch = false;
+	      /* Get the two elements you want to compare,
+	       one from current row and one from the next: */
+	      x = rows[i].getElementsByTagName("TD")[n];
+	      y = rows[i + 1].getElementsByTagName("TD")[n];
+	      /* Check if the two rows should switch place,
+	       based on the direction, asc or desc: */
+	      if (dir == "desc") {
+		  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+		      // If so, mark as a switch and break the loop:
+		      shouldSwitch = true;
+		      break;
+		  }
+	      } else if (dir == "asc") {
+		  if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+		      // If so, mark as a switch and break the loop:
+		      shouldSwitch = true;
+		      break;
+		  }
+	      }
+	  }
+	  if (shouldSwitch) {
+	      /* If a switch has been marked, make the switch
+	       and mark that a switch has been done: */
+	      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+	      switching = true;
+	      // Each time a switch is done, increase this count by 1:
+	      switchcount ++;
+	  } else {
+	      /* If no switching has been done AND the direction is "asc",
+	       set the direction to "desc" and run the while loop again. */
+	      if (switchcount == 0 && dir == "desc") {
+		  dir = "asc";
+		  switching = true;
+	      }
+	  }
+      }
+  }
+</script>
+{% endblock %}
+</body>

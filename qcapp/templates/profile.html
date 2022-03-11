@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block index %}
+
+<style>
+  .center {
+  margin: auto;
+  width: 50%;
+}
+</style>
+
+
+<div class=center>
+  <br>  <br>  <br>  <br> <br>  <br>
+  <h1 class="title">
+    Welcome, {{ name }}!
+  </h1>
+  <p> Email: {{ email }} </p>
+  <br>
+</div>
+  <a class="btn btn-info" href="{{ url_for('listers.pipelist') }}">CTG Pipelines</a>
+  <a class="btn btn-info" href="{{ url_for('listers.list_all_projdir') }}">CTG Projects</a>
+  <a class="btn btn-info" href="{{ url_for('listers.interop') }}">Interop</a>
+  <a class="btn btn-info" href="{{ url_for('guides.sheetguide') }}">CTG SampleSheet guides</a>
+  <a class="btn btn-info" href="{{ url_for('listers.cron') }}">Cron feed</a>
+  <a class="btn btn-info" href="{{ url_for('ctgdata.ctgdata_ctgproj') }}">CTG data</a>
+  <a class="btn btn-info" href="{{ url_for('listers.list_new_proj') }}">New QC</a>
+{% endblock %}

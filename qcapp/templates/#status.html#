@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" http-equiv="refresh" content="59" >
+  <title> CTG status </title>
+</head>
+<style>
+  table {
+      table-layout: auto;
+      width: 100%;
+  }
+
+
+  td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space:pre ;
+  }
+
+    .table_wrapper{
+      display: block;
+#      overflow: auto;
+#      white-space: nowrap;
+      position: sticky;
+      width: 110%;
+      height:100%;
+      left: 10%;
+      right: 8px;
+    }
+    @keyframes blinker {
+	50% {
+	    opacity: 0.3;
+	}
+    }
+    .Sequencing_ongoing{
+	background:  #737CA1     ;
+	font-size: 14px;
+	color: black !important;
+	animation: blinker 3s linear infinite;
+    }
+    .Sequencing_completed{
+	background:    #033E8E ; 
+	font-size: 14px;
+	color: black ;
+	animation: blinker 3s linear infinite;
+    }
+    .Syncing_runfolder{
+	background:     #DAF7A6 ; 
+	font-size: 14px;
+	color:black;
+	animation: blinker 3s linear infinite;
+    }
+    .COMPLETED {
+	color:    white  ;
+	font-size: 14px;
+	background:  #033E3E     ;
+    }
+    .FAILED {
+	color: black   ;
+	font-size: 14px;
+	background: #ff908b      ;
+	animation: blinker 3s linear infinite;
+    }
+    .FAILED-sq {
+	color: black   ;
+	font-size: 14px;
+	background: #ff908b      ;
+    }
+    .Pending{
+	color:  black ;
+	font-size: 14px;
+	background: #faeacb !important;
+	animation: blinker 3s linear infinite;
+    }
+    .Pending-sq{
+	color:   black     ;
+	font-size: 14px;
+	background: #faeacb !important;
+    }
+    .PENDING {
+	color: black   ;
+	font-size: 14px;
+	background: #ff908b      ;
+	animation: blinker 3s linear infinite;
+    }
+    .y {
+	color:    white  ;
+	font-size: 14px;
+	background:  #033E3E     ;
+    }
+    .Done_and_Delivered {
+	color:    white  ;
+	font-size: 14px;
+	background:  #033E3E     ;
+    }
+    .Done {
+	color:    white  ;
+	font-size: 14px;
+	background:  #033E3E     ;
+    }
+    .Delivered {
+	color:    white  ;
+	font-size: 14px;
+	background:  #033E3E     ;
+    }
+    .Running{
+	color:    #033E3E     ;
+	font-size: 14px;
+	background: #DBF9DB !important;
+	animation: blinker 3s linear infinite;
+    }
+    .Running-sq{
+	color:    #033E3E     ;
+	font-size: 14px;
+	background: #DBF9DB !important;
+    }
+
+    .sc-multi-10x-disp{
+	background:  #EDE574   !important;
+	font-size: 14px;
+    }
+    .sc-multi-10x-failed-disp{
+	color:   #C70039    ;
+	font-size: 14px;
+	background: #EDE574 !important;
+    }
+    .sc-multi-10x-done-disp{
+	color:    green     ;
+	font-size: 14px;
+	background: #EDE574 !important;
+    }
+    .sc-multi-10x-delivered-disp{
+	color:    black     ;
+	font-size: 14px;
+	background: #EDE574  !important;
+    }
+
+    .panel-tumor-only-disp{
+	background: #F7CAC9   !important;
+	font-size: 14px;
+    }
+    .panel-tumor-only-failed-disp{
+	color:   #C70039    ;
+	font-size: 14px;
+	background:  #F7CAC9 !important;
+    }
+    .panel-tumor-only-done-disp{
+	color:    green     ;
+	font-size: 14px;
+	background:  #F7CAC9 !important;
+    }
+    .panel-tumor-only-delivered-disp{
+	color:    black     ;
+	font-size: 14px;
+	background:  #F7CAC9 !important;
+    }
+
+  .sc-rna-10x-disp{
+      background:    CornflowerBlue   !important;
+      font-size: 14px;
+  }
+  .sc-rna-10x-failed-disp{
+      color:   #C70039    ;
+      font-size: 14px;
+      background: CornflowerBlue !important;
+  }
+  .sc-rna-10x-done-disp{
+      color:    #74e4b6     ;
+      font-size: 14px;
+      background: CornflowerBlue !important;
+  }
+  .sc-rna-10x-delivered-disp{
+      color:    white     ;
+      font-size: 14px;
+      background: CornflowerBlue !important;
+  }
+
+  .rnaseq-disp{
+      background: #E3F9A6 !important;
+      font-size: 14px;
+  }
+  .rnaseq-failed-disp{
+      color:   #E3F9A6    ;
+      font-size: 14px;
+      background: CornflowerBlue !important;
+  }
+  .rnaseq-done-disp{
+      color:    #74e4b6     ;
+      font-size: 14px;
+      background: #E3F9A6 !important;
+  }
+  .rnaseq-delivered-disp{
+      color:    white     ;
+      font-size: 14px;
+      background: #E3F9A6 !important;
+  }
+
+  .sc-cellplex-10x-disp{
+      background:    #95B9C7   !important;
+      font-size: 14px;
+  }
+  .sc-cellplex-10x-failed-disp{
+      color:   #C70039    ;
+      font-size: 14px;
+      background: #95B9C7 !important;
+  }
+  .sc-cellplex-10x-done-disp{
+      color:    #74e4b6     ;
+      font-size: 14px;
+      background: #95B9C7 !important;
+  }
+  .sc-cellplex-10x-delivered-disp{
+      color:    white     ;
+      font-size: 14px;
+      background: #95B9C7 !important;
+  }
+
+  .sc-cite-seq-10x-disp{
+      background: #C9DFEC   !important;
+      font-size: 14px;
+  }
+  .sc-cite-seq-10x-failed-disp{
+      color:   #C70039    ;
+      font-size: 14px;
+      background: #C9DFEC !important;
+  }
+  .sc-cite-seq-10x-done-disp{
+      color:    #348781     ;
+      font-size: 14px;
+      background: #C9DFEC !important;
+  }
+  .sc-cite-seq-10x-delivered-disp{
+      color:    white     ;
+      font-size: 14px;
+      background: #C9DFEC !important;
+  }
+  
+  .seqonly-disp{
+      background:  #d7bde2   !important;
+      font-size: 14px;
+  }
+  .seqonly-failed-disp{
+      color: #C70039 ;
+      background:  #d7bde2   !important;
+      font-size: 14px;
+  }
+  .seqonly-done-disp{
+      color: #348781 ;
+      background:  #d7bde2   !important;
+      font-size: 14px;
+  }
+  .seqonly-delivered-disp{
+      color: white ;
+      background:  #d7bde2   !important;
+      font-size: 14px;
+  }
+
+
+  .rawdata-failed-disp{
+      color:   #C70039    ;
+      font-size: 14px;
+      background:  #fae5d3  !important;
+  }
+  .rawdata-done-disp{
+      color:    #27ae60      ;
+      font-size: 14px;
+      background: #fae5d3  !important;
+  }
+  .rawdata-done-delivered-disp{
+      color:    #27ae60      ;
+      font-size: 14px;
+      background: #fae5d3  !important;
+  }
+  .rawdata-disp{
+      font-size: 14px;
+      background:  #fae5d3 !important;
+  }
+
+  .interop-disp{
+      background:    Cornsilk   !important;
+      font-size: 14px;
+  }
+  .sav-save-disp{
+      background:   lavender    !important;
+      font-size: 14px;
+  }
+  
+
+  .identified-disp{
+      background:    #e8f6f3    !important;
+      font-size: 14px;
+  }
+  .completed-disp{
+      background:    #a2d9ce    !important;
+      font-size: 14px;
+  }
+  .start-disp{
+      background:    #45b39d  !important;
+      font-size: 14px;
+  }
+  .synced-disp{
+      background:     #138d75    !important;
+      font-size: 14px;
+  }
+
+
+  html, body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background-color:#000;
+      top: 0;
+      left: 0;   
+  }
+
+  .spread { margin:0; } 
+</style>
+
+<body>
+    {% extends "base.html" %}
+    {% block upper %}
+    <h1>
+      CTG STATUS
+    </h1>
+    <div class="table_wrapper">
+      <table id="clickable" style="table-layout:auto; width:100%; font-size:13px;"class="table table-striped table-bordered table-narrow table-hover table-sm">
+	<thead class="first-child">
+          <tr>
+            <th class="first-col-head" style=cursor:pointer onclick="sortTable(1)"> Runfolder </th>
+            <th style=cursor:pointer onclick="sortTable(2)"> proj-id </th>
+            <th style=cursor:pointer onclick="sortTable(3)"> pipeline </th>
+            <th style=cursor:pointer onclick="sortTable(4)"> Pipe Status </th>
+	    <th style=cursor:pointer onclick="sortTable(5)"> Squeue </th>
+            <th style=cursor:pointer onclick="sortTable(6)"> started </th>
+            <th style=cursor:pointer onclick="sortTable(7)"> completed </th>
+          </tr>
+	</thead>
+	<tbody>
+	{% for value in tab %}
+          <tr>
+	    <td class="first-col"> <a style="color:black" href="{{ url_for('listers.interop_html',run=value[0] ) }}"> {{ value[0] }} </a> </td>
+	    <td><a href="{{ url_for('listers.list_projhtml',proj=value[4] ) }}">{{ value[4] }} </td>
+	    <td class="{{ value[5] }}-disp"> <a style="color:black" href="{{ url_for('listers.list_projdir',mode=value[5]) }}">{{ value[5] }} </td>
+	    <td class="{{value[6]}}"> {{ value[6] }} </td>
+	    <td class="{{value[6]}}-sq"> {{ value[10] }} </td>
+	    <td> {{ value[7] }} </td>
+	    <td> {{ value[9] }} </td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+    <div>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+  {% endblock %}
+</body>
+</html>
