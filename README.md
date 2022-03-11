@@ -1,2 +1,2 @@
 # ctg-qcapp
-qc app flask
+qc app based on flask
