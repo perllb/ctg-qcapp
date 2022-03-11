@@ -1,3 +1,3 @@
 # ctg-qcapp
-qc app flask
+qc app (flask sql)
 
