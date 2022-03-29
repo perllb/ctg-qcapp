@@ -32,23 +32,45 @@
 	    opacity: 0.3;
 	}
     }
-    .Sequencing_ongoing{
-	background:  #737CA1     ;
+    .Sequencing_ongoing-runf{
+	background:  #f9caa7     ;
 	font-size: 14px;
 	color: black !important;
 	animation: blinker 3s linear infinite;
     }
-    .Sequencing_completed{
-	background:    #033E8E ; 
+    .Sequencing_ongoing{
+	background:  #f9caa7     ;
+	font-size: 14px;
+	color: black !important;
+	animation: blinker 3s linear infinite;
+    }
+    .Sequencing_completed-runf{
+	background:     #3da4ab ; 
 	font-size: 14px;
 	color: black ;
 	animation: blinker 3s linear infinite;
     }
-    .Syncing_runfolder{
-	background:     #DAF7A6 ; 
+    .Syncing_runfolder-runf{
+	background:     #f6cd61 ; 
 	font-size: 14px;
 	color:black;
 	animation: blinker 3s linear infinite;
+    }
+    .Syncing_runfolder{
+	background:     #f6cd61 ; 
+	font-size: 14px;
+	color:black;
+	animation: blinker 3s linear infinite;
+    }
+    .COMPLETED-disp {
+	color:    white  ;
+	font-size: 14px;
+	background:  #033E3E     ;
+    }
+    .Sync_completed {
+	color:  #f6cd61    ;
+	font-size: 14px;
+	background:  #3da4ab     ;
     }
     .COMPLETED {
 	color:    white  ;
@@ -97,6 +119,11 @@
 	color:    white  ;
 	font-size: 14px;
 	background:  #033E3E     ;
+    }
+    .Demux_Done {
+	color:    white  ;
+	font-size: 14px;
+	background:  #92A8D1     ;
     }
     .Delivered {
 	color:    white  ;
@@ -177,6 +204,19 @@
 
   .rnaseq-disp{
       background: #E3F9A6 !important;
+      font-size: 14px;
+  }
+
+  .rnaseq_mrna-disp{
+      background: #E3F9A6 !important;
+      font-size: 14px;
+  }
+  .rnaseq_total-disp{
+      background: #DFCFBE !important;
+      font-size: 14px;
+  }
+  .rnaseq-uroscan-disp{
+      background: #EFC050 !important;
       font-size: 14px;
   }
   .rnaseq-failed-disp{
@@ -338,7 +378,7 @@
 	<tbody>
 	{% for value in tab %}
           <tr>
-	    <td class="first-col"> <a style="color:black" href="{{ url_for('listers.interop_html',run=value[0] ) }}"> {{ value[0] }} </a> </td>
+	    <td class="{{ value[1] }}-runf"> <a style="color:black" href="{{ url_for('listers.interop_html',run=value[0] ) }}"> {{ value[0] }} </a> </td>
 	    <td><a href="{{ url_for('listers.list_projhtml',proj=value[4] ) }}">{{ value[4] }} </td>
 	    <td class="{{ value[5] }}-disp"> <a style="color:black" href="{{ url_for('listers.list_projdir',mode=value[5]) }}">{{ value[5] }} </td>
 	    <td class="{{value[6]}}"> {{ value[6] }} </td>

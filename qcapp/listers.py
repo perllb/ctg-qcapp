@@ -104,12 +104,12 @@ def list_all_projdir():
                         mode=root.replace(app.config['STATIC_FOLDER'],"").split("/")[3]
                     # Get runfolder of project
                     # Search on first 8 chars (202*_***) of director only
-                    proj = CTGdata.query.filter_by(projid=dir[0:8]).first()
+                    proj = CTGdata.query.filter_by(projid=dir).first()
                     if proj:
                         runfolder = proj.runfolder
                     else:
                         # Search full dirname
-                        proj = CTGdata.query.filter_by(projid=dir).first()
+                        proj = CTGdata.query.filter_by(projid=dir[0:8]).first()
                         if proj:
                             runfolder = proj.runfolder
                         # It might be that the CTGdata project has a suffix, such as 202*_***_suffix
@@ -434,6 +434,13 @@ def ls4cron():
             type="panel-tumor-only"
         if "sc-rna-10x" in line:
             type="sc-rna-10x"
+        if "labsheet" in line:
+            line=line.replace("labsheet","parse-samplesheet: ")
+            type="parse-samplesheet"
+        if "rnaseq" in line:
+            type="rnaseq"
+        if "demux" in line:
+            type="demux"
         if "sc-multi-10x" in line:
             type="sc-multi-10x"
         if "seqonly" in line:
@@ -496,6 +503,12 @@ def cron():
             type="panel-tumor-only"
         if "sc-rna-10x" in line:
             type="sc-rna-10x"
+        if "labsheet" in line:
+            type="parse-samplesheet"
+        if "rnaseq" in line:
+            type="rnaseq"
+        if "demux" in line:
+            type="demux"
         if "sc-multi-10x" in line:
             type="sc-multi-10x"
         if "seqonly" in line:
@@ -590,6 +603,16 @@ def getPending(projPD):
     pendstring="    Pending:\n    - %s" % p
     return(pendstring)
 
+# Function to get pending processes (for def Status below)
+def getRunning(projR):
+    pendproc=[]
+    for index,row in projR.iterrows():
+        proc=row.NAME.split("_")[0].replace("nf-","")
+        pendproc.append(proc)
+    p=str(Counter(pendproc)).replace("Counter({","").replace("})","").replace("'","").replace(",","\n    -").replace(": ",":\t")
+    runstring="    Running:\n    - %s" % p
+    return(runstring)
+
    
 # Display STATUS table files
 @listers.route('/ctg-status')
@@ -656,47 +679,62 @@ def status():
         ######
         pipe=row["pipeline"]
         proj=row["projid"]
+        print("PIPELINE: " + pipe + " " + proj)
+
+        if "rnaseq" in pipe:
+            rescpipe="rnaseq"
+        elif "dna" in pipe:
+            rescpipe="dna"
+        else:
+            rescpipe=pipe
+
+        
         
         # pipe + projid
-        pipeprojdf=pipecron[pipecron[3].str.contains(run)][pipecron[5].str.contains(pipe)][pipecron[5].str.contains(proj)]
+        pipeprojdf=pipecron[pipecron[3].str.contains(run)][pipecron[5].str.contains(pipe[0:6])][pipecron[5].str.contains(proj)]
         # pipe only
-        pipedf=pipecron[pipecron[3].str.contains(run)][pipecron[5].str.contains(pipe)]
+        pipedf=pipecron[pipecron[3].str.contains(run)][pipecron[5].str.contains(pipe) | pipecron[5].str.contains(rescpipe) | pipecron[5].str.contains(pipe.split("_")[0]) | pipecron[5].str.contains("demux")]
         # Sequqe
-        projq = squeue[squeue.NAME.str.contains(proj[0:8]) | squeue.NAME.str.contains(runid)]
-        
+        projq = squeue[squeue.NAME.str.contains(proj) | squeue.NAME.str.contains(runid) | squeue.NAME.str.contains(run)]
+        #print(projq)
         finalstring=""
         runstring=""
         pendstring=""
-        if "R" in list(projq.ST):
-            projtab.loc[index,"Pipe_Status"] = "Running"
-            pipestat="Running"
-            projRun=projq[projq.ST.str.contains("R")]
-            runstring = str(list(projRun[["TIME","NAME","ST"]].agg(" ".join,axis=1))).replace("'","").replace("[","").replace("]","").replace("nf-","").replace(proj,"").replace(runid,"").replace("_("," ").replace("_)"," ").replace(pipe," ").replace(")","").replace("-","").replace(" R","").replace(" PD","").replace(",","\n").replace(proj[0:8],"").replace(runid,"")
-            # See if there are any Pending processes in addition to the running
-            if "PD" in list(projq.ST):
-                projPD=projq[projq.ST.str.contains("PD")]
-                pendstring=getPending(projPD)
-                finalstring=runstring + "\n" + pendstring
-            else:
-                finalstring=runstring
-            # Set Squeue string
-            projtab.loc[index,"Squeue"] = finalstring
-        # if no running prcesses, then gather the pending processes
-        elif "PD" in list(projq.ST):
-            pipestat="Pending"
-            projPD=projq[projq.ST.str.contains("PD")]
-            pendstring=getPending(projPD)
-            finalstring=pendstring
-            projtab.loc[index,"Pipe_Status"] = "Pending"
-            # Set Squeue string
-            projtab.loc[index,"Squeue"] = finalstring
-       # else:
-            # Check Status of last pipe run for runfolder 
-        elif pipedf.empty==False:
+
+        ## Check if pipeline / runfolder is running (in squeue) for project
+        if pipedf.empty==False:
+            # Get if pipeline is started for runfolder
+            last=str(pipedf.iloc[-1].to_frame().transpose()[4])
+            if "START" in last: 
+                # Check squeue for project id (is it running or pending?)
+                if "R" in list(projq.ST):
+                    projtab.loc[index,"Pipe_Status"] = "Running"
+                    pipestat="Running"
+                    projRun=projq[projq.ST.str.contains("R")]
+                    runstring = str(list(projRun[["TIME","NAME","ST"]].agg(" ".join,axis=1))).replace("'","").replace("[","").replace("]","").replace("nf-","").replace(proj,"").replace(runid,"").replace("_("," ").replace("_)"," ").replace(pipe," ").replace(")","").replace("-","").replace(" R","").replace(" PD","").replace(",","\n").replace(proj[0:8],"").replace(runid,"").replace(run,"").replace("__","")
+                    # See if there are any Pending processes in addition to the running
+                    if "PD" in list(projq.ST):
+                        projPD=projq[projq.ST.str.contains("PD")]
+                        pendstring=getPending(projPD)
+                        finalstring=runstring + "\n" + pendstring
+                    else:
+                        finalstring=runstring
+                    # Set Squeue string
+                    projtab.loc[index,"Squeue"] = finalstring
+                # if no running prcesses, then gather the pending processes
+                elif "PD" in list(projq.ST):
+                    pipestat="Pending"
+                    projPD=projq[projq.ST.str.contains("PD")]
+                    pendstring=getPending(projPD)
+                    finalstring=pendstring
+                    projtab.loc[index,"Pipe_Status"] = "Pending"
+                    # Set Squeue string
+                    projtab.loc[index,"Squeue"] = finalstring
+                else:
+                    projtab.loc[index,"Squeue"] = ""
+
+        if pipedf.empty==False:
             last=pipedf.iloc[-1].to_frame().transpose()
-            print("?===============")
-            print("- last pipedf")
-            print(last)
             stat=str(last[4])
             if "DELIV" in stat:
                 date=getDate(last)
@@ -706,8 +744,12 @@ def status():
             if "DONE" in stat:
                 date=getDate(last)
                 projtab.loc[index,"Done"] = date
-                projtab.loc[index,"Pipe_Status"] = "Done"
                 projtab.loc[index,"Squeue"] = ""
+                dem=str(last[5])
+                if "demux" in dem:
+                    projtab.loc[index,"Pipe_Status"] = "Demux_Done"
+                else:
+                    projtab.loc[index,"Pipe_Status"] = "Done"
             if "FAILED" in stat:
                 date=getDate(last)
                 projtab.loc[index,"Failed"] = date
@@ -718,16 +760,47 @@ def status():
                 projtab.loc[index,"Done"] = date
                 projtab.loc[index,"Pipe_Status"] = "Done"
                 projtab.loc[index,"Squeue"] = ""
- #           if "STARTED" in stat:
- #               date=getDate(last)
- #               projtab.loc[index,"Started"] = date
-#                projtab.loc[index,"Pipe_Status"] = "Running"
- #               projtab.loc[index,"Squeue"] = finalstring
+ # look into project-id in log
+        if pipeprojdf.empty==False:
+            last=pipeprojdf.iloc[-1].to_frame().transpose()
+            stat=str(last[4])
+            if "DELIV" in stat:
+                date=getDate(last)
+                projtab.loc[index,"Delivered"] = date
+                projtab.loc[index,"Pipe_Status"] = "Delivered"
+                projtab.loc[index,"Squeue"] = ""
+            if "DONE" in stat:
+                date=getDate(last)
+                projtab.loc[index,"Done"] = date
+                projtab.loc[index,"Squeue"] = ""
+                dem=str(last[5])
+                if "demux" in dem:
+                    projtab.loc[index,"Pipe_Status"] = "Demux_Done"
+                else:
+                    projtab.loc[index,"Pipe_Status"] = "Done"
+            if "FAILED" in stat:
+                date=getDate(last)
+                projtab.loc[index,"Failed"] = date
+                projtab.loc[index,"Pipe_Status"] = "FAILED"
+                projtab.loc[index,"Squeue"] = "FAILED at %s" % date
+            if "DONE" in stat and "DELIV" in stat:
+                date=getDate(pipeprojdf[pipeprojdf[4].str.contains("DONE")])
+                projtab.loc[index,"Done"] = date
+                projtab.loc[index,"Pipe_Status"] = "Done"
+                projtab.loc[index,"Squeue"] = ""
+            if "STARTED" in stat:
+                date=getDate(last)
+                projtab.loc[index,"Started"] = date
+                projtab.loc[index,"Pipe_Status"] = "Running"
+                projtab.loc[index,"Squeue"] = finalstring
+
         # Get last pipe started
         starteds=pipedf[pipedf[4].str.contains("STARTED")]
         if starteds.empty==False:
             last=starteds.iloc[-1].to_frame().transpose()
             projtab.loc[index,"Started"] = getDate(last)
+
+        # If Pipe Status is still empty
         if projtab.loc[index,"Pipe_Status"]=="":
             # Get current projects runfolder - check if syncing/sequencing ongoing
             rf = projtab.loc[index,"Runfolder"]
@@ -769,7 +842,10 @@ def status():
                 if "sequencing compl" in stat:
                     status="Sequencing_completed"
                 # Get samplesheet identified
-                row=pd.Series([rf,"na","na","","",status,status,date,"","","",""])
+                if status == "COMPLETED":
+                    row=pd.Series([rf,"na","na","","",status,"Sync_completed",date,"","","",""])
+                else:
+                    row=pd.Series([rf,"na","na","","",status,status,date,"","","",""])
                 row_df = pd.DataFrame([row], index = [max([i for i in projtab.index])+1])
                 row_df.columns=projtab.columns
                 projtab=pd.concat([projtab,row_df])

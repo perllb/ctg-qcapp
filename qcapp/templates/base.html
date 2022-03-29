@@ -67,15 +67,34 @@
       <div style="size:10px" class="collapse navbar-collapse" id="navbarSupportedContent">
         <a class="navbar-brand" style="color:CadetBlue">CTG web-app</a>
         <ul class="navbar-nav mr-auto ">
+
+
+         <li class="nav-item dropdown">
+	    <a class="nav-link dropdown-toggle" href="{{ url_for('listers.cron') }}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              BNF-news
+            </a>
+	    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	      <a class="dropdown-item" href="{{ url_for('listers.ls4cron') }}#runfoldersync">CTG-Pipelines cronlog</a>
+	      <a class="dropdown-item" href="{{ url_for('listers.rfsync') }}#pipes">Runfolder-sync</a>
+	      <a class="dropdown-item" href="{{ url_for('listers.squeue') }}#squeue">Squeue-LS4</a>
+	    </div>
+          </li>
+
           <li class="nav-item">
+            <a href="{{ url_for('ctgdata.ctgdata_ctgproj') }}"  class="nav-item nav-link" >
+	      CTGdata
+            </a>
+          </li>
+
+	<li class="nav-item">
             <a href="{{ url_for('listers.pipelist') }}"  class="nav-item nav-link ">
-	      CTG Pipelines
+	      CTG-Pipelines
             </a>
           </li>
 	  
           <li class="nav-item">
             <a href="{{ url_for('listers.list_all_projdir') }}"  class="nav-item nav-link ">
-	      CTG Projects
+	      CTG-Projects
             </a>
           </li>
 	  
@@ -84,7 +103,7 @@
 	      Interop
             </a>
           </li>
-
+<!--
 	  <li class="nav-item">
             <a href="{{ url_for('listers.squeue') }}"  class="nav-item nav-link ">
 	      Ls4 squeue
@@ -102,24 +121,8 @@
 	      Lsens4-cron
             </a>
           </li>
-	  
-	  <!--
-          <li class="nav-item dropdown">
-	    <a class="nav-link dropdown-toggle" href="{{ url_for('listers.cron') }}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Cron Feed
-            </a>
-	    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-	      <a class="dropdown-item" href="{{ url_for('listers.cron') }}#runfoldersync">Runfolder-sync</a>
-	      <a class="dropdown-item" href="{{ url_for('listers.cron') }}#pipes">CTG-Pipelines</a>
-	      <a class="dropdown-item" href="{{ url_for('listers.cron') }}#squeue">Squeue-LS4</a>
-	    </div>
-          </li>
-	-->	    
-          <li class="nav-item">
-            <a href="{{ url_for('ctgdata.ctgdata_ctgproj') }}"  class="nav-item nav-link" >
-	      CTGdata
-            </a>
-          </li>
+-->	  
+   
 
 	  <li class="nav-item">
             <a href="{{ url_for('listers.status') }}"  class="nav-item nav-link" >

@@ -28,12 +28,12 @@ def listnewfiles(days):
                             mode=root.replace(app.config['STATIC_FOLDER'],"").split("/")[3]
                         # Get runfolder of project from ctgdata db
                         # Use only first 8 letters (e.g. 202*_***) from dir.. 
-                        proj = CTGdata.query.filter_by(projid=dir[0:8]).first()
+                        proj = CTGdata.query.filter_by(projid=dir).first()
                         if proj:
                             runfolder = proj.runfolder
                         else:
                             # Search full dirname
-                            proj = CTGdata.query.filter_by(projid=dir).first()
+                            proj = CTGdata.query.filter_by(projid=dir[0:8]).first()
                             if proj:
                                 runfolder = proj.runfolder
                             # It might be that the CTGdata project has a suffix, such as 202*_***_suffix

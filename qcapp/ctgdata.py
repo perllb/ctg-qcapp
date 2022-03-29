@@ -348,19 +348,21 @@ def ctgdata_export():
     from sqlalchemy import create_engine
     from flask import make_response
 
-    now = dt.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+    now = dt.datetime.now().strftime('%Y%m%d_%H%M%S')
     fn = app.config["BASEDIR"] + '/ctg-data/dumps/ctg-data.'+now+'.csv'
 
     columns = CTGdata.__table__.columns.keys()
-    with open(fn,'w') as f:
-        out = csv.writer(f,delimiter=";")
-        out.writerow(columns)
-        for row in CTGdata.query.filter(CTGdata.runfolder.startswith("2")).order_by(CTGdata.runfolder.desc()):
-            line = []
-            for col in columns:
-                data = str(row.__dict__[col])
-                line.append(data)
-            out.writerow(line)
+    print("Columns")
+    print(columns)
+    lines=[]
+    for row in CTGdata.query.filter(CTGdata.runfolder.startswith("2")).order_by(CTGdata.runfolder.desc()):
+        line = []
+        for col in columns:
+            data = str(row.__dict__[col])
+            line.append(data)
+        lines.append(line)
+    df=pd.DataFrame(lines,columns=columns)
+    df.to_csv(fn,sep="\t",index=False)
 
     flash('Table exported to "' + fn + '"','success')
     return render_template(
@@ -497,7 +499,7 @@ def ctgdata_scanLsens():
                         datatype=pipeline,
                         lsens4 = 'y',
                         workfolder = "shared/ctg-projects/" + pipeline + "/" + projid + "-" + pipeline,
-                        lfs603user = "ctg-" + projid + "-seqonly",
+                        lfs603user = "ctg-" + projid,
                         ctginterop = interoprun,
                         ctgsavsave = savsaved,
                         created=dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
